@@ -1,0 +1,1 @@
+from syllabify import wordSegmenter
