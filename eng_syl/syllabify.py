@@ -1,18 +1,17 @@
-from tensorflow.keras.layers import Input, Embedding, LSTM, TimeDistributed, Dense, Concatenate, Bidirectional
+from tensorflow.keras.layers import Input, Embedding, LSTM, Dense, Concatenate, Bidirectional
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import ModelCheckpoint
-from tensorflow.keras.callbacks import EarlyStopping, TensorBoard
+from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from BahdanauAttention import AttentionLayer
-from nltk.translate.bleu_score import sentence_bleu
+from eng_syl.BahdanauAttention import AttentionLayer
 import numpy as np
 import pickle
 
 class wordSegmenter:
     def __init__(self, max_encoder_len=34, max_decoder_len=44, latent_dim = 500, embedding_dim=500):
 
-        e2i_file = open('e2i_w2s.pkl', 'rb')
-        d2i_file = open('d2i_w2s.pkl', 'rb')
+        e2i_file = open('eng_syl/e2i_w2s.pkl', 'rb')
+        d2i_file = open('eng_syl/d2i_w2s.pkl', 'rb')
 
         self.latent_dim = latent_dim
         self.embedding_dim = embedding_dim
