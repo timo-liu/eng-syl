@@ -10,8 +10,8 @@ import pickle
 class wordSegmenter:
     def __init__(self, max_encoder_len=34, max_decoder_len=44, latent_dim = 500, embedding_dim=500):
 
-        e2i_file = open('eng_syl/e2i_w2s.pkl', 'rb')
-        d2i_file = open('eng_syl/d2i_w2s.pkl', 'rb')
+        e2i_file = open('e2i_w2s.pkl', 'rb')
+        d2i_file = open('d2i_w2s.pkl', 'rb')
 
         self.latent_dim = latent_dim
         self.embedding_dim = embedding_dim

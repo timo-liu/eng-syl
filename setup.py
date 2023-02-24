@@ -1,18 +1,17 @@
 from setuptools import setup
 
 setup(name='eng-syl',
-      version='0.1',
+      version='0.2',
       description='English word syllabifier',
       url='https://github.com/ellipse-liu/eng-syl',
       author='ellipse-liu',
       author_email='timothys.new.email@gmail.comm',
       license='MIT',
-      packages=['eng-syl'],
+      packages=['eng_syl'],
       install_requires=[
           'tensorflow==2.6.0',
           'nltk',
           'numpy',
-          'pickle',
       ],
       keywords = ['Syllable', 'NLP', 'psycholinguistics'],
       classifiers=[
