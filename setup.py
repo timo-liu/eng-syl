@@ -7,12 +7,10 @@ setup(name='eng-syl',
       author='ellipse-liu',
       author_email='timothys.new.email@gmail.comm',
       license='MIT',
-      packages=['eng-syl'],
+      packages=['eng_syl'],
       install_requires=[
-          'tensorflow==2.6.0',
-          'nltk',
+          'tensorflow',
           'numpy',
-          'pickle',
       ],
       keywords = ['Syllable', 'NLP', 'psycholinguistics'],
       classifiers=[
@@ -20,6 +18,6 @@ setup(name='eng-syl',
         'Intended Audience :: Developers',      # Define that your audience are developers
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',   # Again, pick a license
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.8',
     ],
       zip_safe=False)
