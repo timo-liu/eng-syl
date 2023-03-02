@@ -8,6 +8,8 @@ setup(name='eng-syl',
       author_email='timothys.new.email@gmail.comm',
       license='MIT',
       packages=['eng_syl'],
+      package_data={
+      'eng_syl': ['e2i.pkl', 'syllabler_best_weights.h5'],
       install_requires=[
           'tensorflow',
           'numpy',
