@@ -5,13 +5,13 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(name='eng-syl',
-      version='1.0.8',
+      version='1.0.9',
       description='English word syllabifier',
       long_description=long_description,
       long_description_content_type='text/markdown',
       url='https://github.com/ellipse-liu/eng-syl',
       author='ellipse-liu',
-      author_email='timothys.new.email@gmail.comm',
+      author_email='timothys.new.email@gmail.com',
       license='MIT',
       packages=['eng_syl'],
       package_data={'eng_syl': ['e2i.pkl', 'syllabler_best_weights.h5']},
