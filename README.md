@@ -3,7 +3,7 @@ This program implements a sequence labelling Bidirectional LSTM to identify syll
 
 Use the `syllabify()` function from the `Syllabel` class to syllabify your words:
 
->     >>> from eng_syl.syllabifier import Syllabel
+>     >>> from eng_syl.syllabify import Syllabel
 >     >>> sylabler = Syllabel()
 >     >>> syllabler.syllabify("chomsky")
 >     'chom-sky'
