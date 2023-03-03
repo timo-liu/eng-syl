@@ -6,11 +6,14 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras import backend as K
 import pickle
 import numpy as np
+import os
 
 
 class Syllabel:
-    def __init__(self, input_size=34, e2i=pickle.load(open('e2i.pkl', 'rb')), latent_dim=500, embed_dim=500, max_feat=61):
-        self.e2i = e2i
+    def __init__(self, input_size=34, e2i='e2i.pkl', latent_dim=500, embed_dim=500, max_feat=61):
+        self.this_dir, this_filename = os.path.split(__file__)
+        path_e2i = os.path.join(self.this_dir, e2i)
+        self.e2i = pickle.load(open(path_e2i, 'rb'))
         self.embed_dim = embed_dim
         self.input_size = input_size
         self.latent_dim = latent_dim
@@ -22,6 +25,7 @@ class Syllabel:
                                      input_shape=(input_size, 1)))
         self.model.add(TimeDistributed(Dense(3)))
         self.model.add(Activation('softmax'))
+        self.model.load_weights(os.path.join(self.this_dir,'syllabler_best_weights.h5'))
 
     def ignore_class_accuracy(self, to_ignore=0):
         def ignore_accuracy(y_true, y_pred):
