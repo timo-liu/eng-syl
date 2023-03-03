@@ -1,3 +1,3 @@
 from .syllabify import *
 
-__all__ == ['syllabify']
+__all__ = ['syllabify']
