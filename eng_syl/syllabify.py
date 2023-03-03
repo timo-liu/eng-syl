@@ -54,7 +54,7 @@ class Syllabel:
         for c in word.lower():
             inted += [self.e2i[c]]
         inted = pad_sequences([inted], maxlen=self.input_size, padding='post')[0]
-        predicted = self.model.predict(inted.reshape(1, self.input_size, 1, verbose=0))[0]
+        predicted = self.model.predict(inted.reshape(1, self.input_size, 1), verbose=0)[0]
         converted = self.to_ind(predicted)
 
         return self.insert_syl(word, converted)
