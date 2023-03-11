@@ -50,7 +50,7 @@ class Onceler:
         self.model.fit(x_tr, y_tr, epochs=ep, callbacks=Callbacks, batch_size=batch_size,
                        validation_data=(x_test, y_test))
 
-    def syllabify(self, word):
+    def onc_split(self, word):
         inted = []
         for c in word.lower():
             inted += [self.e2i[c]]
