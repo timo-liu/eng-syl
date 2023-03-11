@@ -9,7 +9,7 @@ import numpy as np
 import os
 
 
-class Syllabel:
+class Onceler:
     def __init__(self, input_size=11, e2i='e2i_onc.pkl', latent_dim=500, embed_dim=500, max_feat=61):
         self.e2i = e2i
         self.this_dir, this_filename = os.path.split(__file__)
