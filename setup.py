@@ -5,8 +5,8 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(name='eng-syl',
-      version='1.0.9',
-      description='English word syllabifier',
+      version='2.0.0',
+      description='English word syllabifier and extended syllable analysis tool',
       long_description=long_description,
       long_description_content_type='text/markdown',
       url='https://github.com/ellipse-liu/eng-syl',
@@ -14,7 +14,7 @@ setup(name='eng-syl',
       author_email='timothys.new.email@gmail.com',
       license='MIT',
       packages=['eng_syl'],
-      package_data={'eng_syl': ['e2i.pkl', 'syllabler_best_weights.h5']},
+      package_data={'eng_syl': ['*.pkl', '*.h5']},
       install_requires=[
           'tensorflow',
           'numpy',
