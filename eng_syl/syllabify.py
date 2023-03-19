@@ -12,6 +12,8 @@ import os
 class Syllabel:
     def __init__(self, input_size=34, e2i='e2i.pkl', latent_dim=500, embed_dim=500, max_feat=61):
         self.this_dir, this_filename = os.path.split(__file__)
+        path_clean = os.path.join(self.this_dir, 'clean.pkl')
+        self.clean = pickle.load(open(path_clean, 'rb'))
         path_e2i = os.path.join(self.this_dir, e2i)
         self.e2i = pickle.load(open(path_e2i, 'rb'))
         self.embed_dim = embed_dim
@@ -50,6 +52,8 @@ class Syllabel:
                        validation_data=(x_test, y_test))
 
     def syllabify(self, word):
+        if self.in_data(word):
+            return self.clean[word]
         inted = []
         for c in word.lower():
             inted += [self.e2i[c]]
@@ -58,6 +62,12 @@ class Syllabel:
         converted = self.to_ind(predicted)
 
         return self.insert_syl(word, converted)
+
+    def in_data(self, word):
+        if word in self.clean:
+            return True
+        else:
+            return False
 
     def test_predict(self, x_tr, y_tr, ind):
         print(y_tr[ind])

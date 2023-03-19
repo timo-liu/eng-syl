@@ -14,6 +14,8 @@ class Onceler:
         self.e2i = e2i
         self.this_dir, this_filename = os.path.split(__file__)
         path_e2i = os.path.join(self.this_dir, e2i)
+        path_clean = os.path.join(self.this_dir, 'clean_onc.pkl')
+        self.clean = pickle.load(open(path_clean, 'rb'))
         self.e2i = pickle.load(open(path_e2i, 'rb'))
         self.embed_dim = embed_dim
         self.input_size = input_size
@@ -51,6 +53,8 @@ class Onceler:
                        validation_data=(x_test, y_test))
 
     def onc_split(self, word):
+        if self.in_data(word):
+            return self.clean[word]
         inted = []
         for c in word.lower():
             inted += [self.e2i[c]]
@@ -60,10 +64,11 @@ class Onceler:
 
         return (self.insert_syl(word, converted))
 
-    def test_predict(self, x_tr, y_tr, ind):
-        print(y_tr[ind])
-        results = self.model.predict(x_tr[ind].reshape(1, self.input_size, 1))[0]
-        print(self.to_ind(results))
+    def in_data(self,word):
+        if word in self.clean:
+            return True
+        else:
+            return False
 
     def to_ind(self, sequence):
         index_sequence = []
