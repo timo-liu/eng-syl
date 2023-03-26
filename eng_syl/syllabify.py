@@ -1,5 +1,5 @@
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, TimeDistributed, Bidirectional, Input, Embedding, Activation
+from tensorflow.keras.layers import LSTM, Dense, TimeDistributed, Bidirectional, Input, Embedding, Activation< GRU
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -23,7 +23,9 @@ class Syllabel:
         self.model = Sequential()
         self.model.add(Input(input_size, ))
         self.model.add(Embedding(self.max_feat, self.embed_dim, input_length=self.input_size))
-        self.model.add(Bidirectional(LSTM(self.latent_dim, return_sequences=True, recurrent_dropout=0.4),
+        self.model.add(Bidirectional(GRU(self.latent_dim, return_sequences=True, recurrent_dropout=0.4),
+                                     input_shape=(input_size, 1)))
+        self.model.add(Bidirectional(GRU(self.latent_dim, return_sequences=True, recurrent_dropout=0.4),
                                      input_shape=(input_size, 1)))
         self.model.add(TimeDistributed(Dense(3)))
         self.model.add(Activation('softmax'))

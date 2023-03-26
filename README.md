@@ -1,5 +1,9 @@
 ﻿# English Syllabifier (eng_syl)
-This program implements a sequence labelling Bidirectional LSTM to identify syllable boundaries in English words. The model was trained on data from the  [WebCelex](http://celex.mpi.nl/) English wordform corpus.
+This is a GRU-based neural network designed for English word syllabification. The model was trained on data from the  [WebCelex](http://celex.mpi.nl/) English wordform corpus.
+
+Achieved an F1 score of 0.879 on 5000 novel words after 2 training passes, as well as achieved 4999/5000 correct syllable count.
+
+## Usage
 
 Use the `syllabify()` function from the `Syllabel` class to syllabify your words:
 
