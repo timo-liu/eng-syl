@@ -1,87 +1,64 @@
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, TimeDistributed, Bidirectional, Input, Embedding, Activation< GRU
+from tensorflow.keras.layers import  Dense, TimeDistributed, Bidirectional, Input, Embedding, Activation, GRU, ZeroPadding1D
 from tensorflow.keras.models import Model
-from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
+from tensorflow.keras import regularizers
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras import backend as K
 import pickle
 import numpy as np
 import os
 
 
 class Syllabel:
-    def __init__(self, input_size=34, e2i='e2i.pkl', latent_dim=500, embed_dim=500, max_feat=61):
+    def __init__(self,e2i_ortho ='e2i.pkl', ortho_input_size=45, latent_dim=256, embed_dim=256, max_feat=259):
         self.this_dir, this_filename = os.path.split(__file__)
         path_clean = os.path.join(self.this_dir, 'clean.pkl')
-        self.clean = pickle.load(open(path_clean, 'rb'))
-        path_e2i = os.path.join(self.this_dir, e2i)
-        self.e2i = pickle.load(open(path_e2i, 'rb'))
-        self.embed_dim = embed_dim
-        self.input_size = input_size
+        self.clean = pickle.load(open(path_clean,'rb'))
+        path_e2i = os.path.join(self.this_dir, e2i_ortho)
+        self.e2i_ortho = pickle.load(open(path_e2i, 'rb'))
+        self.ortho_input_size = ortho_input_size
         self.latent_dim = latent_dim
-        self.max_feat = max_feat + 1  # include dim for padding value 0 (no corresponding index in dict)
-        self.model = Sequential()
-        self.model.add(Input(input_size, ))
-        self.model.add(Embedding(self.max_feat, self.embed_dim, input_length=self.input_size))
-        self.model.add(Bidirectional(GRU(self.latent_dim, return_sequences=True, recurrent_dropout=0.4),
-                                     input_shape=(input_size, 1)))
-        self.model.add(Bidirectional(GRU(self.latent_dim, return_sequences=True, recurrent_dropout=0.4),
-                                     input_shape=(input_size, 1)))
-        self.model.add(TimeDistributed(Dense(3)))
-        self.model.add(Activation('softmax'))
+        self.embed_dim = embed_dim
+        self.max_feat = max_feat
+        self.model = self.build_model()
         self.model.load_weights(os.path.join(self.this_dir,'syllabler_best_weights.h5'))
 
-    def ignore_class_accuracy(self, to_ignore=0):
-        def ignore_accuracy(y_true, y_pred):
-            y_true_class = K.argmax(y_true, axis=-1)
-            y_pred_class = K.argmax(y_pred, axis=-1)
 
-            ignore_mask = K.cast(K.not_equal(y_pred_class, to_ignore), 'int32')
-            matches = K.cast(K.equal(y_true_class, y_pred_class), 'int32') * ignore_mask
-            accuracy = K.sum(matches) / K.maximum(K.sum(ignore_mask), 1)
-            return accuracy
-
-        return ignore_accuracy
-
-    def fit(self, x_tr, y_tr, x_test, y_test, ep, batch_size, save_filename):
-        self.model.compile(loss='categorical_crossentropy', optimizer='adam',
-                           metrics=['accuracy', self.ignore_class_accuracy(0)])
-        es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=2)
-        ck = ModelCheckpoint(filepath=save_filename, monitor='accuracy', verbose=1, save_best_only=True,
-                             mode='max')
-        Callbacks = [es, ck]
-        self.model.fit(x_tr, y_tr, epochs=ep, callbacks=Callbacks, batch_size=batch_size,
-                       validation_data=(x_test, y_test))
-
+    def build_model(self):
+        
+        # orthographic and ipa input layers
+        ortho_inputs = Input(self.ortho_input_size,)
+        # first branch ortho
+        x = Embedding(self.max_feat, self.embed_dim, input_length=self.ortho_input_size)(ortho_inputs)
+        x = Bidirectional(GRU(self.latent_dim, return_sequences=True, recurrent_dropout = 0.2, activity_regularizer=regularizers.l2(1e-5)), input_shape=(self.ortho_input_size, 1))(x)
+        x = Bidirectional(GRU(self.latent_dim, return_sequences=True, recurrent_dropout = 0.2, activity_regularizer= regularizers.l2(1e-5) ), input_shape=(self.ortho_input_size, 1))(x)
+        # x = TimeDistributed(Dense(3, activation = 'softmax'))(x)
+        x = ZeroPadding1D(padding=(0, self.ortho_input_size - x.shape[1]))(x)
+        z = TimeDistributed(Dense(3))(x)
+        z = Activation('softmax')(z)
+        
+        model = Model(inputs=[ortho_inputs], outputs=z)
+        
+        return model
+    
     def syllabify(self, word):
-        if self.in_data(word):
-            return self.clean[word]
-        inted = []
-        for c in word.lower():
-            inted += [self.e2i[c]]
-        inted = pad_sequences([inted], maxlen=self.input_size, padding='post')[0]
-        predicted = self.model.predict(inted.reshape(1, self.input_size, 1), verbose=0)[0]
-        converted = self.to_ind(predicted)
-
-        return self.insert_syl(word, converted)
-
-    def in_data(self, word):
         if word in self.clean:
-            return True
-        else:
-            return False
-
-    def test_predict(self, x_tr, y_tr, ind):
-        print(y_tr[ind])
-        results = self.model.predict(x_tr[ind].reshape(1, self.input_size, 1))[0]
-        print(self.to_ind(results))
-
+            return self.clean[word]
+        inted_ortho = []
+        for c in word.lower():
+            inted_ortho += [self.e2i_ortho[c]]
+            
+        
+        inted_ortho = pad_sequences([inted_ortho], maxlen=self.ortho_input_size, padding='post')[0]
+        predicted = self.model.predict(inted_ortho.reshape(1, self.ortho_input_size, 1), verbose = 0)[0]
+        indexes = self.to_ind(predicted)
+        converted = self.insert_syl(word, indexes)
+        return converted
+    
     def to_ind(self, sequence):
         index_sequence = []
         for ind in sequence:
             index_sequence += [np.argmax(ind)]
         return index_sequence
-
+    
     def insert_syl(self, word, indexes):
         index_list = np.where(np.array(indexes) == 2)[0]
         word_array = [*word]
