@@ -52,7 +52,19 @@ class Syllabel:
         indexes = self.to_ind(predicted)
         converted = self.insert_syl(word, indexes)
         return converted
-    
+
+    def machine_syllabify(self, word):
+        inted_ortho = []
+        for c in word.lower():
+            inted_ortho += [self.e2i_ortho[c]]
+
+
+        inted_ortho = pad_sequences([inted_ortho], maxlen=self.ortho_input_size, padding='post')[0]
+        predicted = self.model.predict(inted_ortho.reshape(1, self.ortho_input_size, 1), verbose = 0)[0]
+        indexes = self.to_ind(predicted)
+        converted = self.insert_syl(word, indexes)
+        return converted
+
     def to_ind(self, sequence):
         index_sequence = []
         for ind in sequence:
