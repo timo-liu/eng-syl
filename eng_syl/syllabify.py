@@ -77,3 +77,4 @@ class Syllabel:
         for i in range(0, len(index_list)):
             word_array.insert(index_list[i] + i + 1, '-')
         return ''.join(word_array)
+

@@ -25,5 +25,16 @@ The `onc_split()` function from the  `Onceler` class splits single syllables int
 >     >>> print(lorax.onc_split("sloan")
 >     'sl-oa-n'
 
- - text: string - English single syllable word/ component to be segmented into Onset, Nucleus, Coda. Input should only contain alphabetic characters.
+ - **text**: *string* - English single syllable word/ component to be segmented into Onset, Nucleus, Coda. Input should only contain alphabetic characters.
+
+## Phonify (Grapheme sequence to IPA estimation)
+
+The `ipafy()` function from the  `on_to_phon` class tries to approximate an IPA pronunciation from a sequence of graphemes.
+
+>     >>> from eng_syl.phonify import onc_to_phon
+>     >>> skibidi = onc_to_phon()
+>     >>> print(skibidi.ipafy(['b', 'u', 'tt'])
+>     'bʌt'
+
+ - **sequence**: *array of strings* - sa sequence of English viable onsets, nuclei, and coda
 
