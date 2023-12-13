@@ -20,7 +20,7 @@ class onc_to_phon:
         self.latent_dim = latent_dim
         self.embed_dim = embed_dim
         self.max_feat_e = len(self.e2i) + 1
-        self.max_feat_d = len(self.internal_d2i) + 1
+        self.max_feat_d = len(internal_d2i) + 1
         self.model = self.build_model()
         self.model.load_weights(os.path.join(self.this_dir,'op_best_weights.h5'))
 
