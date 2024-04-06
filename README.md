@@ -3,10 +3,10 @@ This is a GRU-based neural network designed for English word syllabification. Th
 
 ## Usage
 
-Use the `syllabify()` function from the `Syllabel` class to syllabify your words:
+Use the `syllabify()` function from the `Syllable` class to syllabify your words:
 
->     >>> from eng_syl.syllabify import Syllabel
->     >>> syllabler = Syllabel()
+>     >>> from eng_syl.syllabify import Syllable
+>     >>> syllabler = Syllable()
 >     >>> syllabler.syllabify("chomsky")
 >     'chom-sky'
 
@@ -36,5 +36,5 @@ The `ipafy()` function from the  `on_to_phon` class tries to approximate an IPA 
 >     >>> print(skibidi.ipafy(['b', 'u', 'tt'])
 >     'bʌt'
 
- - **sequence**: *array of strings* - sa sequence of English viable onsets, nuclei, and coda
+ - **sequence**: *array of strings* - a sequence of English viable onsets, nuclei, and coda
 
