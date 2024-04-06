@@ -7,7 +7,7 @@ import numpy as np
 import os
 
 
-class Syllabel:
+class Syllable:
     def __init__(self,e2i_ortho ='e2i.pkl', ortho_input_size=45, latent_dim=256, embed_dim=256, max_feat=259):
         self.this_dir, this_filename = os.path.split(__file__)
         path_clean = os.path.join(self.this_dir, 'clean.pkl')
