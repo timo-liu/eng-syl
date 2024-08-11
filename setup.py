@@ -5,11 +5,11 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(name='eng-syl',
-      version='4.0.1',
+      version='4.0.4',
       description='English word syllabifier and extended syllable analysis tool',
       long_description=long_description,
       long_description_content_type='text/markdown',
-      url='https://github.com/ellipse-liu/eng-syl',
+      url='https://github.com/timo-liu/eng-syl',
       author='Timothy-Liu',
       author_email='timothys.new.email@gmail.com',
       license='MIT',

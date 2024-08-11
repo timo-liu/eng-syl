@@ -38,3 +38,13 @@ The `ipafy()` function from the  `on_to_phon` class tries to approximate an IPA 
 
  - **sequence**: *array of strings* - sa sequence of English viable onsets, nuclei, and coda
 
+# 4.0.2 Notes
+Fixed a typo in build_model(), where improper shape was being passed into Input()
+Reverted class name from Syllabel -> Syllable -> Syllabel
+
+# 4.0.3 Notes
+Added handling for non-alpha characters in string; syllabify() won't break immediately if you pass a string like 'he23llotruc38k'. Instead, syllabify() syllabifies the string, ignoring non-alpha characters, and reinserts the non-alpha characters with hyphenation -> 'he23l-lo-truc38k'. This allows for handling of prehyphenated words like 'u-turn' -> 'u--turn'.
+Also added an arg for returning the syllables as a list in syllabify(word, return_list = False). Should be capable of handling most strings now.
+
+# 4.0.4 Notes
+Added arg save_clean to syllabify(word, save_clean = True). When save_clean, new words will be saved to self.clean for future reference.

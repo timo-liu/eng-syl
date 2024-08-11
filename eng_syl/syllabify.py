@@ -25,7 +25,7 @@ class Syllabel:
     def build_model(self):
         
         # orthographic and ipa input layers
-        ortho_inputs = Input(self.ortho_input_size,)
+        ortho_inputs = Input((self.ortho_input_size,))
         # first branch ortho
         x = Embedding(self.max_feat, self.embed_dim, input_length=self.ortho_input_size)(ortho_inputs)
         x = Bidirectional(GRU(self.latent_dim, return_sequences=True, recurrent_dropout = 0.2, activity_regularizer=regularizers.l2(1e-5)), input_shape=(self.ortho_input_size, 1))(x)
@@ -39,31 +39,43 @@ class Syllabel:
         
         return model
     
-    def syllabify(self, word):
+    def syllabify(self, word, return_list = False, save_clean = True):
         if word in self.clean:
-            return self.clean[word]
-        inted_ortho = []
-        for c in word.lower():
-            inted_ortho += [self.e2i_ortho[c]]
+            if return_list:
+                if isinstance(self.clean[word], list):
+                    return self.clean[word]
+                else:
+                    return self.clean[word].split('-')
             
-        
-        inted_ortho = pad_sequences([inted_ortho], maxlen=self.ortho_input_size, padding='post')[0]
-        predicted = self.model.predict(inted_ortho.reshape(1, self.ortho_input_size, 1), verbose = 0)[0]
-        indexes = self.to_ind(predicted)
-        converted = self.insert_syl(word, indexes)
-        return converted
+        else:
+            outcome = self.machine_syllabify(word, return_list)
+            if save_clean:
+                self.clean[word] = outcome
+            return outcome
 
-    def machine_syllabify(self, word):
+    def machine_syllabify(self, word, return_list = False):
         inted_ortho = []
-        for c in word.lower():
-            inted_ortho += [self.e2i_ortho[c]]
+        non_alpha = []
+        non_alpha_indexes = []
+        alpha_word = ""
+        for i, c in enumerate(word):
+            if not c.isalpha():
+                non_alpha.append(c)
+                non_alpha_indexes.append(i)
+            else:
+                inted_ortho += [self.e2i_ortho[c.lower()]]
+                alpha_word += c
 
 
         inted_ortho = pad_sequences([inted_ortho], maxlen=self.ortho_input_size, padding='post')[0]
         predicted = self.model.predict(inted_ortho.reshape(1, self.ortho_input_size, 1), verbose = 0)[0]
         indexes = self.to_ind(predicted)
-        converted = self.insert_syl(word, indexes)
-        return converted
+        converted = self.insert_syl(alpha_word, indexes)
+        with_non_alpha = self.reinsert_nonalpha(converted, non_alpha, non_alpha_indexes, indexes)
+        if not return_list:
+            return with_non_alpha
+        else:
+            return self.split_by_syllable(with_non_alpha, non_alpha_indexes, indexes)
 
     def to_ind(self, sequence):
         index_sequence = []
@@ -77,4 +89,40 @@ class Syllabel:
         for i in range(0, len(index_list)):
             word_array.insert(index_list[i] + i + 1, '-')
         return ''.join(word_array)
+
+    def reinsert_nonalpha(self, word, non_alpha, non_alpha_indexes, syl_indexes): # word is already hyphenated
+        if non_alpha:
+            inserted = 0
+            word_array = [*word]
+            
+            for c,i in zip(non_alpha, non_alpha_indexes):
+                insert_nums = len(np.where(np.array(syl_indexes[:i-inserted]) == 2)[0])
+                word_array.insert(i + insert_nums, c)
+                inserted += 1
+            return ''.join(word_array)
+        else:
+            return word
+
+    def split_by_syllable(self, word, non_alpha_indexes, syl_indexes): # word is the reinserted with non_alphas string
+            if not non_alpha_indexes:
+                return word.split('-')
+            else:
+                orig_index_list = np.where(np.array(syl_indexes) == 2)[0]
+                new_index_list = []
+                for index in orig_index_list:
+                    filtered = [a for i, a in enumerate(non_alpha_indexes) if a - i <= index]
+                    new_index_list.append(index + len(filtered))
+                
+                # Split the word based on the adjusted indices
+                prev_index = 0
+                result = []
+                
+                for j, index in enumerate(new_index_list, start = 1):
+                    result.append(word[prev_index:index + j])
+                    prev_index = index + j
+                
+                # Add the remaining part of the string
+                result.append(word[prev_index:])
+                
+                return result
 
