@@ -22,7 +22,7 @@ class Onceler:
         self.latent_dim = latent_dim
         self.max_feat = max_feat + 1  # include dim for padding value 0 (no corresponding index in dict)
         self.model = Sequential()
-        self.model.add(Input(input_size, ))
+        self.model.add(Input((input_size, )))
         self.model.add(Embedding(self.max_feat, self.embed_dim, input_length=self.input_size))
         self.model.add(Bidirectional(LSTM(self.latent_dim, return_sequences=True, recurrent_dropout=0.4),
                                      input_shape=(input_size, 1)))
