@@ -21,20 +21,20 @@ Use the `syllabify()` function from the `Syllabel` class to syllabify your words
 The `onc_split()` function from the  `Onceler` class splits single syllables into their constituent Onset, Nucleus, and Coda components.
 
 >     >>> from eng_syl.onceler import Onceler
->     >>> lorax = Onceler()
->     >>> print(lorax.onc_split("sloan")
->     'sl-oa-n'
+>     >>> onc = Onceler()
+>     >>> print(onc.onc_split("schmear")
+>     'schm-ea-r'
 
  - **text**: *string* - English single syllable word/ component to be segmented into Onset, Nucleus, Coda. Input should only contain alphabetic characters.
 
 ## Phonify (Grapheme sequence to IPA estimation)
 
-The `ipafy()` function from the  `on_to_phon` class tries to approximate an IPA pronunciation from a sequence of graphemes.
+The `ipafy()` function from the  `onc_to_phon` class tries to approximate an IPA pronunciation from a sequence of graphemes.
 
 >     >>> from eng_syl.phonify import onc_to_phon
->     >>> skibidi = onc_to_phon()
->     >>> print(skibidi.ipafy(['b', 'u', 'tt'])
->     'bʌt'
+>     >>> otp = onc_to_phon()
+>     >>> print(otp.ipafy(['schm', 'ea', 'r'])
+>     ['ʃm', 'ɪ', 'r']
 
  - **sequence**: *array of strings* - sa sequence of English viable onsets, nuclei, and coda
 
