@@ -8,6 +8,7 @@ tags:
 authors:
   - name: Timothy Liu
     orcid: 0009-0006-9071-0728
+    equal-contrib: false
     affiliation: 1 # (Multiple affiliations must be quoted)
 affiliations:
  - name: University of California Davis, United States
