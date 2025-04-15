@@ -40,17 +40,28 @@ class Syllabel:
         return model
     
     def syllabify(self, word, return_list = False, save_clean = True):
-        if word in self.clean:
+        if word.lower() in self.clean:
             if return_list:
-                if isinstance(self.clean[word], list):
-                    return self.clean[word]
+                if isinstance(self.clean[word.lower()], list):
+                    a = '-'.join(self.clean[word.lower()])
+                    indexes = [i for i,c in enumerate(a) if c == '-']
+                    return self.insert_syl_raw(word, indexes).split('-')
                 else:
-                    return self.clean[word].split('-')
+                    indexes = [i for i,c in enumerate(self.clean[word.lower()]) if c == '-']
+                    return self.insert_syl_raw(word, indexes).split('-')
+            else:
+                if isinstance(self.clean[word.lower()], list):
+                    a = '-'.join(self.clean[word.lower()])
+                    indexes = [i for i,c in enumerate(a) if c == '-']
+                    return self.insert_syl_raw(word, indexes)
+                else:
+                    indexes = [i for i,c in enumerate(self.clean[word.lower()]) if c == '-']
+                    return self.insert_syl_raw(word, indexes)
             
         else:
             outcome = self.machine_syllabify(word, return_list)
             if save_clean:
-                self.clean[word] = outcome
+                self.clean[word.lower()] = outcome
             return outcome
 
     def machine_syllabify(self, word, return_list = False):
@@ -85,6 +96,13 @@ class Syllabel:
     
     def insert_syl(self, word, indexes):
         index_list = np.where(np.array(indexes) == 2)[0]
+        word_array = [*word]
+        for i in range(0, len(index_list)):
+            word_array.insert(index_list[i] + i + 1, '-')
+        return ''.join(word_array)
+
+    def insert_syl_raw(self, word, indexes):
+        index_list = indexes
         word_array = [*word]
         for i in range(0, len(index_list)):
             word_array.insert(index_list[i] + i + 1, '-')

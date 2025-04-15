@@ -51,3 +51,6 @@ Added arg save_clean to syllabify(word, save_clean = True). When save_clean, new
 
 # 4.0.7 Notes
 Added evaluate_english_validity(syllable) to Syllabel, which returns the onset nucleus coda decomposition split by hyphens if the syllable is likely English pronounceable, and False if unlikely.
+
+# 4.0.7 Notes
+Fixed [casing issues](https://github.com/timo-liu/eng-syl/issues/5) by adding a check to verify only lowercase strings, and consistently reinsert syllable coundaries regardless of original casing.
