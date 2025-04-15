@@ -1,0 +1,2 @@
+exclude test.ipynb
+prune .ipynb_checkpoints

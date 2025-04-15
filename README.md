@@ -48,3 +48,6 @@ Also added an arg for returning the syllables as a list in syllabify(word, retur
 
 # 4.0.4 Notes
 Added arg save_clean to syllabify(word, save_clean = True). When save_clean, new words will be saved to self.clean for future reference.
+
+# 4.0.7 Notes
+Added evaluate_english_validity(syllable) to Syllabel, which returns the onset nucleus coda decomposition split by hyphens if the syllable is likely English pronounceable, and False if unlikely.

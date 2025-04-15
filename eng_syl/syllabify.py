@@ -126,3 +126,41 @@ class Syllabel:
                 
                 return result
 
+    def evaluate_english_validity(self, syllable):
+        '''
+        Evaluate whether or not the syllable is likely to be English pronounceable
+        Returns: onced up words or False
+        '''
+        onsets = ['bl', 'br', 'cl', 'cr', 'dr', 'fl', 'fr', 'gl', 'gr', 'pl', 'pr', 'sk', 'sl', 'sm', 'sn',
+     'sp', 'st', 'str', 'sw', 'tr', 'ch', 'sh', 'm', 'c', 'b', 'r', 'd', 'h', 's', 'p', 'l', 'g', 'f', 'w', 't', 'k', 'n', 'v', 'st', 'pr', 'j', 'br', 'ch', 'gr', 'sh',
+  'tr', 'cr', 'fr', 'z', 'sp', 'wh', 'cl', 'y', 'bl', 'th', 'fl', 'sch', 'pl', 'q', 'dr', 'str', 'sc', 'sl', 'kr', 'sw', 'gl',
+  'ph', 'kl', 'sm', 'sn', 'kn', 'sk', 'mcc', 'scr', 'wr', 'mc', 'chr', 'spr', 'thr', 'tw', 'schw', 'mcg', 'mck', 'rh',
+  'sq', 'schl', 'shr', 'schr', 'x', 'schm', 'mcm', 'gh', 'mcn', 'hyp', 'mccl', 'schn', 'mcd', 'hydr', 'kh', 'ts',
+  'mcl', 'spl', 'dw', 'pf', 'mccr', 'mcf', 'typ', 'cz', 'sr', 'cycl', 'gn', 'hr', 'hy', 'syn', 'sz', 'kw', 'dyn', 'phys', 'symb', 'dyn', 'symb']
+
+        nuclei = ['a', 'e', 'i', 'o', 'u', 'oo', 'ia', 'ie', 'ee', 'io', 'au', 'ea', 'ou', 'ai', 'ue', 'ei', 'eau', 'eu', 'oe', 'ae', 'eo',
+  'oa', 'oo', 'ao', 'ua', 'oi', 'ui', 'aa', 'ieu', 'uo', 'oia', 'aue', 'iu', 'aia', 'iou', 'ii', 'aio', 'uie', 'eia', 'iao' ,'y', 'uh', 
+          'ay', 'ey','ah','eh','oh','oy', 'aigh', 'igh', 'eigh', 'aw', 'ow', 'ew', 'ye', 'ooh', 'owe', 'awe', 'ore', 'er', 'or', 'ere', 
+          'are', 'ar', 'ur', 'ir', 'ire', 'ue', 'eye', 'aye', 'ye', 'uy']
+
+        onsets = sorted(sorted(set(onsets)),key=len, reverse=True)
+        nuclei = sorted(sorted(set(nuclei)),key=len, reverse=True)
+
+        for i in onsets:
+            if syllable.startswith(i):
+                i_less = syllable.replace(i, '', 1)
+                for n in nuclei:
+                    if i_less.startswith(n):
+                        n_less = i_less.replace(n, '')
+                        return i + '-' + n + '-' + n_less
+            break
+        for n in nuclei:
+                if syllable.startswith(n):
+                    i = ''
+                    n_less = syllable.replace(n, '')
+                    return  n + '-' + n_less
+                elif n in syllable:
+                    onset, coda = syllable.split(n, 1)
+                    return '-'.join([onset, n, coda])
+        return False
+

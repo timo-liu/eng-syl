@@ -5,7 +5,7 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(name='eng-syl',
-      version='4.0.5',
+      version='4.0.7',
       description='English word syllabifier and extended syllable analysis tool',
       long_description=long_description,
       long_description_content_type='text/markdown',
